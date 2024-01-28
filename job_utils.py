@@ -9,7 +9,7 @@ import sys
 
 session = PromptSession(history=FileHistory('.command_history'))
 
-
+# Color and text formatting
 class Colors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -23,6 +23,22 @@ class Colors:
 def print_colored(message, color):
     print(f"{color}{message}{Colors.ENDC}")
 
+# Function to center text based on the console's width
+def center_text(text):
+    terminal_width = shutil.get_terminal_size().columns
+    return text.center(terminal_width)
+
+def print_centered(message, color):
+    centered_message = center_text(message)
+    print(f"{color}{centered_message}{Colors.ENDC}")
+
+# Config parsing
+def get_path_from_config(var_name):
+    with open('config.json') as f:
+        config = json.load(f)
+    return config.get(var_name)
+
+# Path completion for manual input
 class EnhancedPathCompleter(Completer):
     def __init__(self, file_extension=None):
         self.file_extension = file_extension
@@ -37,6 +53,11 @@ class EnhancedPathCompleter(Completer):
                 path = os.path.join(directory, name)
                 if os.path.isdir(path) or (self.file_extension and name.endswith(self.file_extension)):
                     yield Completion(name, start_position=-len(partial))
+
+# Path input with completion
+def get_path_input(prompt_text, file_extension=None):
+    completer = EnhancedPathCompleter(file_extension=file_extension) if file_extension else None
+    return session.prompt(prompt_text, completer=completer)
 
 def fzf_file_search(file_extension):
     home_dir = os.path.expanduser('~')
@@ -83,32 +104,12 @@ def get_output_file_path():
     return os.path.join(selected_dir, output_file_name)
 
 
-
-def get_path_from_config(var_name):
-    with open('config.json') as f:
-        config = json.load(f)
-    return config.get(var_name)
-
-
-def get_path_input(prompt_text, file_extension=None):
-    completer = EnhancedPathCompleter(file_extension=file_extension) if file_extension else None
-    return session.prompt(prompt_text, completer=completer)
-
 def get_non_path_input(prompt_text, color=Colors.OKBLUE):
     return input(color + prompt_text + Colors.ENDC)
 
 def get_non_path_input_centered(prompt_text, color=Colors.OKBLUE):
     prompt_text_centered = center_text(prompt_text)
     return input(color + prompt_text_centered + Colors.ENDC)
-
-# Function to center text based on the console's width
-def center_text(text):
-    terminal_width = shutil.get_terminal_size().columns
-    return text.center(terminal_width)
-
-def print_centered(message, color):
-    centered_message = center_text(message)
-    print(f"{color}{centered_message}{Colors.ENDC}")
 
 
 def run_command(command):
