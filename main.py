@@ -107,24 +107,6 @@ def ligprep_task():
         print("Aborting.")
         sys.exit()
 
-def write_in_file(in_file_path, grid_file, ligand_file, output_dir):
-    contents = f"""GRIDFILE {grid_file}
-LIGANDFILE {ligand_file}
-POSE_OUTTYPE ligandlib_sd
-DOCKING_METHOD confgen
-PRECISION SP
-AMIDE_MODE penal
-SAMPLE_RINGS True
-EPIK_PENALTIES True
-OUTPUTDIR {output_dir}
-"""
-    with open(in_file_path, 'w') as file:
-        file.write(contents)
-
-def print_in_file(in_file_path):
-    with open(in_file_path, 'r') as file:
-        print(file.read())
-
 def glide_docking_task():
     schrodinger_path = get_path_from_config('schrodinger_path')
     print(f"Schrodinger Path: {schrodinger_path}")

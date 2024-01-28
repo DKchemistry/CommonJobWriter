@@ -38,6 +38,25 @@ def get_path_from_config(var_name):
         config = json.load(f)
     return config.get(var_name)
 
+# Glide `.in` file generation
+def write_in_file(in_file_path, grid_file, ligand_file, output_dir):
+    contents = f"""GRIDFILE {grid_file}
+LIGANDFILE {ligand_file}
+POSE_OUTTYPE ligandlib_sd
+DOCKING_METHOD confgen
+PRECISION SP
+AMIDE_MODE penal
+SAMPLE_RINGS True
+EPIK_PENALTIES True
+OUTPUTDIR {output_dir}
+"""
+    with open(in_file_path, 'w') as file:
+        file.write(contents)
+
+def print_in_file(in_file_path):
+    with open(in_file_path, 'r') as file:
+        print(file.read())
+
 # Path completion for manual input
 class EnhancedPathCompleter(Completer):
     def __init__(self, file_extension=None):
