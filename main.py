@@ -4,7 +4,8 @@ import sys
 from job_utils import * 
 
 def stereo_enum_task():
-    print_colored("Running Stereochemical Enumeration (Unenumerated Stereocenter Only) \n",Colors.HEADER)
+    print_colored("Running Stereochemical Enumeration (Unassigned Stereocenter Only) \n",
+                  Colors.HEADER)
 
     mct_path = get_path_from_config('mct_path')
     conda_path = get_path_from_config('conda_path')
@@ -33,7 +34,11 @@ def stereo_enum_task():
         print("Invalid choice.")
         return
 
-    print_colored("Choose output method:\n1. Manual Filepath Input\n2. fzf Directory Search", Colors.HEADER)
+    print_colored("Choose output method:\n"+
+                  "1. Manual Filepath Input\n"+
+                  "2. fzf Directory Search\n", 
+                  Colors.HEADER)
+    
     output_choice = get_non_path_input("Enter choice (1 or 2) for output file: ")
 
     if output_choice == "1":
@@ -66,7 +71,10 @@ def ligprep_task():
     print(f"Schrodinger Path: {schrodinger_path}")
     print(f"Ligprep Input File: {ligprep_inp}")
 
-    print_centered("Choose input method:\n1. Manual Filepath Input\n2. fzf File Search", Colors.HEADER)
+    print_centered("Choose input method:\n"+
+                   "1. Manual Filepath Input\n"+
+                   "2. fzf File Search",
+                   Colors.HEADER)
 
     input_choice = get_non_path_input("Enter choice (1 or 2): ")
 
@@ -121,7 +129,10 @@ def glide_docking_task():
     schrodinger_path = get_path_from_config('schrodinger_path')
     print(f"Schrodinger Path: {schrodinger_path}")
 
-    print_centered("Choose output directory method:\n1. Manual Filepath Input\n2. fzf Directory Search", Colors.HEADER)
+    print_colored("Choose output directory method:\n"+
+                   "1. Manual Filepath Input\n"+
+                   "2. fzf Directory Search", Colors.HEADER)
+    
     output_choice = get_non_path_input("Enter choice (1 or 2) for output directory: ")
 
     if output_choice == "1":
@@ -163,7 +174,6 @@ def glide_docking_task():
     else:
         print("Aborting.")
         sys.exit()
-
 
 # Task registration dictionary
 tasks = {
