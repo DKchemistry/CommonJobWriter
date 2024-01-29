@@ -130,6 +130,14 @@ def get_non_path_input_centered(prompt_text, color=Colors.OKBLUE):
     prompt_text_centered = center_text(prompt_text)
     return input(color + prompt_text_centered + Colors.ENDC)
 
+def run_command_dir(command, working_dir):
+    try:
+        result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=os.environ, cwd=working_dir)
+        print("Command Output:\n", result.stdout)
+        print("Error (if any):\n", result.stderr)
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+        print("Stderr:\n", e.stderr)
 
 def run_command(command):
     # Set to user's home directory. Change if different working directory is needed.
