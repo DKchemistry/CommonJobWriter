@@ -3,6 +3,11 @@ from prompt_toolkit.history import FileHistory
 import sys
 from job_utils import * 
 
+# TODO: Abstract more task logic into job_utils.py:
+# e.g. for schrodinger, we can have cpus, njobs, jobname input requests
+# schrodinger_job_inputs(), so we can make different variations more easy
+# schrodinger_different_directory() might work too. don't get too crazy 
+
 def stereo_enum_task():
     print_colored("Running Stereochemical Enumeration (Unassigned Stereocenter Only) \n",
                   Colors.HEADER)
