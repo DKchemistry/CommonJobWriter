@@ -1,22 +1,27 @@
 from prompt_toolkit import PromptSession
-from prompt_toolkit.history import FileHistory 
+from prompt_toolkit.history import FileHistory
 import sys
-from job_utils import * 
+from job_utils import *
+
 
 def stereo_enum_task():
-    print_colored("Running Stereochemical Enumeration (Unassigned Stereocenter Only) \n",
-                  Colors.HEADER)
+    print_colored(
+        "Running Stereochemical Enumeration (Unassigned Stereocenter Only) \n",
+        Colors.HEADER,
+    )
 
-    mct_path = get_path_from_config('mct_path')
-    conda_path = get_path_from_config('conda_path')
+    mct_path = get_path_from_config("mct_path")
+    conda_path = get_path_from_config("conda_path")
 
     print_colored(f"MCT Path via config: {mct_path}", Colors.OKGREEN)
     print_colored(f"Conda path via config: {conda_path}\n", Colors.OKGREEN)
 
-    print_colored("Choose input method for input file (*.smi):\n"+
-                  "1. Manual Filepath Input\n" +
-                  "2. fzf File Search\n",
-                  Colors.HEADER)
+    print_colored(
+        "Choose input method for input file (*.smi):\n"
+        + "1. Manual Filepath Input\n"
+        + "2. fzf File Search\n",
+        Colors.HEADER,
+    )
 
     input_choice = get_non_path_input("Enter choice (1 or 2) for input file: \n")
 
@@ -25,7 +30,7 @@ def stereo_enum_task():
         print(f"Input file selected: {input_file}\n")
 
     elif input_choice == "2":
-        input_file = fzf_file_search('.smi')
+        input_file = fzf_file_search(".smi")
         print(f"Input file selected: {input_file}\n")
         if not input_file:
             print("No file selected.")
@@ -34,11 +39,13 @@ def stereo_enum_task():
         print("Invalid choice.")
         return
 
-    print_colored("Choose output method:\n"+
-                  "1. Manual Filepath Input\n"+
-                  "2. fzf Directory Search\n", 
-                  Colors.HEADER)
-    
+    print_colored(
+        "Choose output method:\n"
+        + "1. Manual Filepath Input\n"
+        + "2. fzf Directory Search\n",
+        Colors.HEADER,
+    )
+
     output_choice = get_non_path_input("Enter choice (1 or 2) for output file: ")
 
     if output_choice == "1":
@@ -53,10 +60,10 @@ def stereo_enum_task():
     else:
         print("Invalid choice.")
         return
-    
+
     command = f"{conda_path} {mct_path}/RDKitEnumerateStereoisomers.py -i {input_file} -d no -m UnassignedOnly -o {output_file}"
     print(f"Running command: {command}")
-    
+
     confirm_choice = get_non_path_input("Confirm (y/n): ")
     if confirm_choice == "y":
         run_command(command)
@@ -64,17 +71,18 @@ def stereo_enum_task():
         print("Aborting.")
         sys.exit()
 
+
 def ligprep_task():
-    schrodinger_path = get_path_from_config('schrodinger_path')
-    ligprep_inp = get_path_from_config('ligprep_inp')
+    schrodinger_path = get_path_from_config("schrodinger_path")
+    ligprep_inp = get_path_from_config("ligprep_inp")
 
     print(f"Schrodinger Path: {schrodinger_path}")
     print(f"Ligprep Input File: {ligprep_inp}")
 
-    print_centered("Choose input method:\n"+
-                   "1. Manual Filepath Input\n"+
-                   "2. fzf File Search",
-                   Colors.HEADER)
+    print_centered(
+        "Choose input method:\n" + "1. Manual Filepath Input\n" + "2. fzf File Search",
+        Colors.HEADER,
+    )
 
     input_choice = get_non_path_input("Enter choice (1 or 2): ")
 
@@ -82,7 +90,7 @@ def ligprep_task():
         input_file = get_path_input("Enter input file path: ", file_extension=".smi")
         print(f"Input file selected: {input_file}\n")
     elif input_choice == "2":
-        input_file = fzf_file_search('.smi')
+        input_file = fzf_file_search(".smi")
         print(f"Input file selected: {input_file}\n")
         if not input_file:
             print("No file selected.")
@@ -99,7 +107,7 @@ def ligprep_task():
     command = f"{schrodinger_path}/ligprep -inp {ligprep_inp} -ismi {input_file} -osd {output_sdf} -HOST localhost:{cpus} -NJOBS {njobs} -JOBNAME {job_name}"
 
     print(f"Running command: {command}")
-    
+
     confirm_choice = get_non_path_input("Confirm (y/n): ")
     if confirm_choice == "y":
         run_command(command)
@@ -107,14 +115,18 @@ def ligprep_task():
         print("Aborting.")
         sys.exit()
 
+
 def glide_docking_task():
-    schrodinger_path = get_path_from_config('schrodinger_path')
+    schrodinger_path = get_path_from_config("schrodinger_path")
     print(f"Schrodinger Path: {schrodinger_path}")
 
-    print_colored("Choose output directory method:\n"+
-                   "1. Manual Filepath Input\n"+
-                   "2. fzf Directory Search", Colors.HEADER)
-    
+    print_colored(
+        "Choose output directory method:\n"
+        + "1. Manual Filepath Input\n"
+        + "2. fzf Directory Search",
+        Colors.HEADER,
+    )
+
     output_choice = get_non_path_input("Enter choice (1 or 2) for output directory: ")
 
     if output_choice == "1":
@@ -127,7 +139,7 @@ def glide_docking_task():
     else:
         print("Invalid choice.")
         return
-    
+
     print(f"Output directory selected: {output_dir}\n")
     input("Press 'Enter' to begin searching for a grid file (.zip)")
     grid_file = fzf_file_search(".zip")
@@ -149,13 +161,14 @@ def glide_docking_task():
     command = f"{schrodinger_path}/glide -HOST localhost:{cpus} -NJOBS {njobs} -JOBNAME {job_name} {in_file_path}"
 
     print(f"Running command: {command}")
-    
+
     confirm_choice = get_non_path_input("Confirm (y/n): ")
     if confirm_choice == "y":
         run_command(command)
     else:
         print("Aborting.")
         sys.exit()
+
 
 # Task registration dictionary
 tasks = {
@@ -173,6 +186,7 @@ task_descriptions = {
     # Add descriptions for new tasks here
 }
 
+
 def main():
     print(Colors.OKGREEN + Colors.BOLD + "\nTask Options:\n" + Colors.ENDC)
     for idx, key in enumerate(tasks, start=1):
@@ -188,6 +202,7 @@ def main():
         task_function()
     else:
         print("Invalid choice.")
+
 
 if __name__ == "__main__":
     main()
